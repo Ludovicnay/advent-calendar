@@ -24,7 +24,8 @@ class AdventCalendar {
 
         // Load saved data
         this.theme = localStorage.getItem('adventTheme') || 'light';
-        this.adminPassword = localStorage.getItem('adventAdminPassword') || null;
+        // Fixed admin password - no account creation
+        this.adminPassword = 'admin!';
         this.giftPools = this.loadGiftPools();
         this.openedDays = this.loadOpenedDays(); // { dayNumber: { category, giftData, note } }
         this.notes = this.loadNotes();
@@ -40,7 +41,6 @@ class AdventCalendar {
         this.giftPoolModal = document.getElementById('giftPoolModal');
         this.editGiftModal = document.getElementById('editGiftModal');
         this.importModal = document.getElementById('importModal');
-        this.passwordModal = document.getElementById('passwordModal');
         this.celebrationOverlay = document.getElementById('celebrationOverlay');
 
         // Initialize
@@ -301,13 +301,7 @@ class AdventCalendar {
         if (isAdmin) {
             const password = document.getElementById('adminPassword').value;
 
-            // First time setup
-            if (!this.adminPassword) {
-                this.openModal(this.passwordModal);
-                return;
-            }
-
-            // Check password
+            // Check fixed admin password
             if (password !== this.adminPassword) {
                 alert('Mot de passe incorrect !');
                 return;
@@ -334,30 +328,23 @@ class AdventCalendar {
         this.appContainer.classList.add('hidden');
         document.getElementById('loginName').value = '';
         document.getElementById('adminPassword').value = '';
+        // Reset to user mode
+        document.querySelector('.login-tab[data-tab="user"]').click();
     }
 
-    setPassword() {
-        const newPass = document.getElementById('newPassword').value;
-        const confirmPass = document.getElementById('confirmPassword').value;
+    toggleAdminMode() {
+        // Toggle between user and admin tabs
+        const adminTab = document.querySelector('.login-tab[data-tab="admin"]');
+        const userTab = document.querySelector('.login-tab[data-tab="user"]');
+        const isCurrentlyAdmin = adminTab.classList.contains('active');
 
-        if (!newPass || newPass.length < 4) {
-            alert('Le mot de passe doit contenir au moins 4 caractères !');
-            return;
+        if (isCurrentlyAdmin) {
+            userTab.click();
+        } else {
+            adminTab.click();
         }
-
-        if (newPass !== confirmPass) {
-            alert('Les mots de passe ne correspondent pas !');
-            return;
-        }
-
-        this.adminPassword = newPass;
-        localStorage.setItem('adventAdminPassword', newPass);
-        this.closeModal(this.passwordModal);
-
-        // Now complete the login
-        document.getElementById('adminPassword').value = newPass;
-        this.login(true);
     }
+
 
     showApp() {
         this.loginScreen.classList.add('hidden');
@@ -421,16 +408,12 @@ class AdventCalendar {
     // ============================================
 
     updateUI() {
-        this.updateRemainingCounts();
         this.updateProgress();
         this.renderCalendar();
+        this.checkEmptyCategories();
     }
 
-    updateRemainingCounts() {
-        document.getElementById('remainingA').textContent = this.getRemainingGifts('A');
-        document.getElementById('remainingB').textContent = this.getRemainingGifts('B');
-        document.getElementById('remainingC').textContent = this.getRemainingGifts('C');
-
+    checkEmptyCategories() {
         // Disable empty categories
         document.querySelectorAll('.category-card').forEach(card => {
             const category = card.dataset.category;
@@ -572,7 +555,12 @@ class AdventCalendar {
             if (e.key === 'Enter') this.verifyAccess();
         });
 
-        // Login tabs
+        // Hidden admin button (invisible, in top right corner)
+        document.getElementById('hiddenAdminBtn').addEventListener('click', () => {
+            this.toggleAdminMode();
+        });
+
+        // Login tabs (hidden but still functional)
         document.querySelectorAll('.login-tab').forEach(tab => {
             tab.addEventListener('click', (e) => {
                 document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
@@ -598,9 +586,6 @@ class AdventCalendar {
         document.getElementById('adminPassword').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') document.getElementById('loginBtn').click();
         });
-
-        // Password setup
-        document.getElementById('savePassword').addEventListener('click', () => this.setPassword());
 
         // Theme toggle
         document.getElementById('themeToggle').addEventListener('click', () => this.toggleTheme());
@@ -1003,7 +988,7 @@ class AdventCalendar {
         this.saveGiftPools();
         this.closeModal(this.editGiftModal);
         this.renderGiftPoolList(this.editingCategory);
-        this.updateRemainingCounts();
+        this.checkEmptyCategories();
     }
 
     deleteGift() {
@@ -1014,7 +999,7 @@ class AdventCalendar {
             this.saveGiftPools();
             this.closeModal(this.editGiftModal);
             this.renderGiftPoolList(this.editingCategory);
-            this.updateRemainingCounts();
+            this.checkEmptyCategories();
         }
     }
 
@@ -1178,7 +1163,7 @@ class AdventCalendar {
     }
 
     closeAllModals() {
-        [this.surpriseModal, this.noteModal, this.giftPoolModal, this.editGiftModal, this.importModal, this.passwordModal].forEach(modal => {
+        [this.surpriseModal, this.noteModal, this.giftPoolModal, this.editGiftModal, this.importModal].forEach(modal => {
             if (modal) this.closeModal(modal);
         });
     }

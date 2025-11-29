@@ -54,13 +54,15 @@
 
     <!-- Login Screen -->
     <div class="login-screen" id="loginScreen">
+        <!-- Hidden admin button in top right corner -->
+        <button class="hidden-admin-btn" id="hiddenAdminBtn" title=""></button>
         <div class="login-container">
             <div class="login-header">
                 <h1>💝 Notre Calendrier de l'Avent 💝</h1>
                 <p>25 Jours d'Amour et de Surprises</p>
             </div>
             <div class="login-form">
-                <div class="login-tabs">
+                <div class="login-tabs hidden">
                     <button class="login-tab active" data-tab="user">Mon Calendrier</button>
                     <button class="login-tab" data-tab="admin">Mode Configuration</button>
                 </div>
@@ -80,7 +82,7 @@
                 </div>
             </div>
             <div class="login-footer">
-                <p>Première visite ? Demande l'accès configuration à ton partenaire !</p>
+                <p>💕 Un calendrier rien que pour nous 💕</p>
             </div>
         </div>
     </div>
@@ -138,25 +140,16 @@
                     <div class="category-card-icon">🏠</div>
                     <h3>Ensemble en Personne</h3>
                     <p>Expériences partagées, sorties, activités</p>
-                    <div class="category-remaining">
-                        <span id="remainingA">25</span> surprises restantes
-                    </div>
                 </button>
                 <button class="category-card category-b" data-category="B">
                     <div class="category-card-icon">💌</div>
                     <h3>À Distance</h3>
                     <p>Connexion virtuelle, messages, surprises</p>
-                    <div class="category-remaining">
-                        <span id="remainingB">25</span> surprises restantes
-                    </div>
                 </button>
                 <button class="category-card category-c" data-category="C">
                     <div class="category-card-icon">🌙</div>
                     <h3>Soirée Ensemble</h3>
                     <p>Moments romantiques en soirée</p>
-                    <div class="category-remaining">
-                        <span id="remainingC">25</span> surprises restantes
-                    </div>
                 </button>
             </div>
         </section>
@@ -320,29 +313,6 @@
                 <button class="btn btn-primary" id="confirmImport">Importer 📥</button>
             </div>
             <button class="modal-close" id="closeImportModal">×</button>
-        </div>
-    </div>
-
-    <!-- Password Setup Modal -->
-    <div class="modal-overlay" id="passwordModal">
-        <div class="modal">
-            <div class="modal-header">
-                <h2>🔐 Créer un Mot de Passe</h2>
-                <p>Ce mot de passe protège la configuration des cadeaux</p>
-            </div>
-            <div class="modal-body">
-                <div class="edit-field">
-                    <label>Nouveau mot de passe</label>
-                    <input type="password" id="newPassword" placeholder="Entre ton mot de passe...">
-                </div>
-                <div class="edit-field">
-                    <label>Confirmer le mot de passe</label>
-                    <input type="password" id="confirmPassword" placeholder="Confirme le mot de passe...">
-                </div>
-            </div>
-            <div class="modal-actions">
-                <button class="btn btn-primary" id="savePassword">Sauvegarder 🔒</button>
-            </div>
         </div>
     </div>
 
