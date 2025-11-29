@@ -31,9 +31,11 @@ class AdventCalendar {
         this.notes = this.loadNotes();
         this.lastOpenDate = localStorage.getItem('adventLastOpenDate') || null;
 
+        // Admin mode state
+        this.isAdminMode = false;
+
         // DOM Elements
         this.accessScreen = document.getElementById('accessScreen');
-        this.loginScreen = document.getElementById('loginScreen');
         this.appContainer = document.getElementById('appContainer');
         this.calendarGrid = document.getElementById('calendarGrid');
         this.surpriseModal = document.getElementById('surpriseModal');
@@ -54,15 +56,17 @@ class AdventCalendar {
     }
 
     // ============================================
-    // GLOBAL ACCESS
+    // ACCESS & LOGIN
     // ============================================
 
     checkAccess() {
         const accessGranted = sessionStorage.getItem('adventAccessGranted');
+        const isAdmin = sessionStorage.getItem('adventIsAdmin') === 'true';
+
         if (accessGranted === 'true') {
             this.isAccessGranted = true;
-            this.showLoginScreen();
-            this.checkAutoLogin();
+            this.isAdmin = isAdmin;
+            this.showApp();
         } else {
             this.showAccessScreen();
         }
@@ -70,29 +74,56 @@ class AdventCalendar {
 
     showAccessScreen() {
         this.accessScreen.classList.remove('hidden');
-        this.loginScreen.classList.add('hidden');
         this.appContainer.classList.add('hidden');
+        // Reset admin mode display
+        this.isAdminMode = false;
+        this.updateLoginDisplay();
     }
 
-    showLoginScreen() {
-        this.accessScreen.classList.add('hidden');
-        this.loginScreen.classList.remove('hidden');
-        this.appContainer.classList.add('hidden');
+    toggleAdminMode() {
+        this.isAdminMode = !this.isAdminMode;
+        this.updateLoginDisplay();
+    }
+
+    updateLoginDisplay() {
+        const adminField = document.querySelector('.access-form .admin-only');
+        const userText = document.querySelector('.user-login-text');
+        const adminText = document.querySelector('.admin-login-text');
+
+        if (adminField) adminField.classList.toggle('hidden', !this.isAdminMode);
+        if (userText) userText.classList.toggle('hidden', this.isAdminMode);
+        if (adminText) adminText.classList.toggle('hidden', !this.isAdminMode);
     }
 
     verifyAccess() {
         const password = document.getElementById('accessPassword').value;
 
-        if (password === this.globalAccessPassword) {
-            this.isAccessGranted = true;
-            sessionStorage.setItem('adventAccessGranted', 'true');
-            this.showLoginScreen();
-            this.checkAutoLogin();
-        } else {
+        // Check main password first
+        if (password !== this.globalAccessPassword) {
             alert('Mot de passe incorrect ! 🔒');
             document.getElementById('accessPassword').value = '';
             document.getElementById('accessPassword').focus();
+            return;
         }
+
+        // If admin mode, also check admin password
+        if (this.isAdminMode) {
+            const adminPassword = document.getElementById('adminPassword').value;
+            if (adminPassword !== this.adminPassword) {
+                alert('Mot de passe admin incorrect ! 🔒');
+                document.getElementById('adminPassword').value = '';
+                document.getElementById('adminPassword').focus();
+                return;
+            }
+            this.isAdmin = true;
+        } else {
+            this.isAdmin = false;
+        }
+
+        this.isAccessGranted = true;
+        sessionStorage.setItem('adventAccessGranted', 'true');
+        sessionStorage.setItem('adventIsAdmin', this.isAdmin ? 'true' : 'false');
+        this.showApp();
     }
 
     // ============================================
@@ -276,83 +307,27 @@ class AdventCalendar {
         return gift;
     }
 
-    // ============================================
-    // AUTHENTICATION
-    // ============================================
-
-    checkAutoLogin() {
-        const savedSession = localStorage.getItem('adventSession');
-        if (savedSession) {
-            const session = JSON.parse(savedSession);
-            this.userName = session.userName;
-            this.isAdmin = session.isAdmin;
-            this.showApp();
-        }
-    }
-
-    login(isAdmin) {
-        const name = document.getElementById('loginName').value.trim();
-
-        if (!name) {
-            alert('Entre ton prénom !');
-            return;
-        }
-
-        if (isAdmin) {
-            const password = document.getElementById('adminPassword').value;
-
-            // Check fixed admin password
-            if (password !== this.adminPassword) {
-                alert('Mot de passe incorrect !');
-                return;
-            }
-        }
-
-        this.userName = name;
-        this.isAdmin = isAdmin;
-
-        // Save session
-        localStorage.setItem('adventSession', JSON.stringify({
-            userName: name,
-            isAdmin: isAdmin
-        }));
-
-        this.showApp();
-    }
-
     logout() {
-        localStorage.removeItem('adventSession');
-        this.userName = '';
+        sessionStorage.removeItem('adventAccessGranted');
+        sessionStorage.removeItem('adventIsAdmin');
         this.isAdmin = false;
-        this.loginScreen.classList.remove('hidden');
+        this.isAccessGranted = false;
+        this.accessScreen.classList.remove('hidden');
         this.appContainer.classList.add('hidden');
-        document.getElementById('loginName').value = '';
+        document.getElementById('accessPassword').value = '';
         document.getElementById('adminPassword').value = '';
-        // Reset to user mode
-        document.querySelector('.login-tab[data-tab="user"]').click();
-    }
-
-    toggleAdminMode() {
-        // Toggle between user and admin tabs
-        const adminTab = document.querySelector('.login-tab[data-tab="admin"]');
-        const userTab = document.querySelector('.login-tab[data-tab="user"]');
-        const isCurrentlyAdmin = adminTab.classList.contains('active');
-
-        if (isCurrentlyAdmin) {
-            userTab.click();
-        } else {
-            adminTab.click();
-        }
+        this.isAdminMode = false;
+        this.updateLoginDisplay();
     }
 
 
     showApp() {
-        this.loginScreen.classList.add('hidden');
+        this.accessScreen.classList.add('hidden');
         this.appContainer.classList.remove('hidden');
 
         // Update welcome message
         document.getElementById('welcomeTitle').textContent =
-            this.isAdmin ? 'Mode Configuration' : `Calendrier de ${this.userName}`;
+            this.isAdmin ? 'Mode Configuration' : 'Notre Calendrier de l\'Avent';
         document.getElementById('welcomeSubtitle').textContent =
             this.isAdmin ? 'Ajoute et gère les surprises' : '25 Jours d\'Amour et de Surprises';
 
@@ -549,42 +524,18 @@ class AdventCalendar {
     // ============================================
 
     bindEvents() {
-        // Access screen
+        // Access screen - login button
         document.getElementById('accessBtn').addEventListener('click', () => this.verifyAccess());
         document.getElementById('accessPassword').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.verifyAccess();
+        });
+        document.getElementById('adminPassword').addEventListener('keypress', (e) => {
             if (e.key === 'Enter') this.verifyAccess();
         });
 
         // Hidden admin button (invisible, in top right corner)
         document.getElementById('hiddenAdminBtn').addEventListener('click', () => {
             this.toggleAdminMode();
-        });
-
-        // Login tabs (hidden but still functional)
-        document.querySelectorAll('.login-tab').forEach(tab => {
-            tab.addEventListener('click', (e) => {
-                document.querySelectorAll('.login-tab').forEach(t => t.classList.remove('active'));
-                e.target.classList.add('active');
-
-                const isAdmin = e.target.dataset.tab === 'admin';
-                document.querySelector('.admin-only').classList.toggle('hidden', !isAdmin);
-                document.querySelector('.user-login-text').classList.toggle('hidden', isAdmin);
-                document.querySelector('.admin-login-text').classList.toggle('hidden', !isAdmin);
-            });
-        });
-
-        // Login button
-        document.getElementById('loginBtn').addEventListener('click', () => {
-            const isAdmin = document.querySelector('.login-tab.active').dataset.tab === 'admin';
-            this.login(isAdmin);
-        });
-
-        // Enter key on login
-        document.getElementById('loginName').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') document.getElementById('loginBtn').click();
-        });
-        document.getElementById('adminPassword').addEventListener('keypress', (e) => {
-            if (e.key === 'Enter') document.getElementById('loginBtn').click();
         });
 
         // Theme toggle

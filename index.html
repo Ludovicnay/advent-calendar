@@ -29,60 +29,32 @@
         <div class="confetti-container" id="confettiContainer"></div>
     </div>
 
-    <!-- Access Screen (Global Password) -->
+    <!-- Login Screen (Single password screen) -->
     <div class="access-screen" id="accessScreen">
+        <!-- Hidden admin button in top right corner -->
+        <button class="hidden-admin-btn" id="hiddenAdminBtn" title=""></button>
         <div class="access-container">
             <div class="access-header">
-                <div class="access-icon">🔐</div>
-                <h1>Calendrier de l'Avent</h1>
-                <p>Un espace privé rien que pour nous</p>
+                <div class="access-icon">💝</div>
+                <h1>Notre Calendrier de l'Avent</h1>
+                <p>Un espace privé rien que pour nous deux</p>
             </div>
             <div class="access-form">
                 <div class="access-field">
-                    <label>Mot de passe d'accès</label>
+                    <label>Mot de passe</label>
                     <input type="password" id="accessPassword" placeholder="Entre le mot de passe..." autocomplete="off">
                 </div>
+                <div class="access-field admin-only hidden">
+                    <label>Mot de passe admin</label>
+                    <input type="password" id="adminPassword" placeholder="Mot de passe configuration...">
+                </div>
                 <button class="btn btn-primary access-btn" id="accessBtn">
-                    Entrer 💕
+                    <span class="user-login-text">Ouvrir le Calendrier 💕</span>
+                    <span class="admin-login-text hidden">Mode Configuration 🔧</span>
                 </button>
             </div>
             <div class="access-footer">
-                <p>💝 Demande le mot de passe à ton amoureux 💝</p>
-            </div>
-        </div>
-    </div>
-
-    <!-- Login Screen -->
-    <div class="login-screen" id="loginScreen">
-        <!-- Hidden admin button in top right corner -->
-        <button class="hidden-admin-btn" id="hiddenAdminBtn" title=""></button>
-        <div class="login-container">
-            <div class="login-header">
-                <h1>💝 Notre Calendrier de l'Avent 💝</h1>
-                <p>25 Jours d'Amour et de Surprises</p>
-            </div>
-            <div class="login-form">
-                <div class="login-tabs hidden">
-                    <button class="login-tab active" data-tab="user">Mon Calendrier</button>
-                    <button class="login-tab" data-tab="admin">Mode Configuration</button>
-                </div>
-                <div class="login-content">
-                    <div class="login-field">
-                        <label>Entre ton prénom</label>
-                        <input type="text" id="loginName" placeholder="Ton prénom..." autocomplete="off">
-                    </div>
-                    <div class="login-field admin-only hidden">
-                        <label>Mot de passe admin</label>
-                        <input type="password" id="adminPassword" placeholder="Mot de passe pour configurer...">
-                    </div>
-                    <button class="btn btn-primary login-btn" id="loginBtn">
-                        <span class="user-login-text">Ouvrir Mon Calendrier 💕</span>
-                        <span class="admin-login-text hidden">Entrer en Mode Configuration 🔧</span>
-                    </button>
-                </div>
-            </div>
-            <div class="login-footer">
-                <p>💕 Un calendrier rien que pour nous 💕</p>
+                <p>💕 Demande le mot de passe à ton amoureux 💕</p>
             </div>
         </div>
     </div>
