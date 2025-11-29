@@ -27,6 +27,7 @@ class AdventCalendar {
         this.giftPools = this.loadGiftPools();
         this.openedDays = this.loadOpenedDays(); // { dayNumber: { category, giftData, note } }
         this.notes = this.loadNotes();
+        this.lastOpenDate = localStorage.getItem('adventLastOpenDate') || null;
 
         // DOM Elements
         this.accessScreen = document.getElementById('accessScreen');
@@ -91,6 +92,74 @@ class AdventCalendar {
             document.getElementById('accessPassword').value = '';
             document.getElementById('accessPassword').focus();
         }
+    }
+
+    // ============================================
+    // DAILY LIMIT SYSTEM
+    // ============================================
+
+    getTodayDateString() {
+        const today = new Date();
+        return today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    }
+
+    canOpenToday() {
+        // Admin can always open
+        if (this.isAdmin) return true;
+
+        const today = this.getTodayDateString();
+        return this.lastOpenDate !== today;
+    }
+
+    markOpenedToday() {
+        const today = this.getTodayDateString();
+        this.lastOpenDate = today;
+        localStorage.setItem('adventLastOpenDate', today);
+    }
+
+    getTimeUntilMidnight() {
+        const now = new Date();
+        const midnight = new Date(now);
+        midnight.setHours(24, 0, 0, 0);
+        return midnight - now;
+    }
+
+    formatTimeRemaining(ms) {
+        const hours = Math.floor(ms / (1000 * 60 * 60));
+        const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((ms % (1000 * 60)) / 1000);
+
+        if (hours > 0) {
+            return `${hours}h ${minutes}min`;
+        } else if (minutes > 0) {
+            return `${minutes}min ${seconds}s`;
+        } else {
+            return `${seconds}s`;
+        }
+    }
+
+    startCountdownTimer() {
+        // Clear existing timer
+        if (this.countdownInterval) {
+            clearInterval(this.countdownInterval);
+        }
+
+        const updateCountdown = () => {
+            const statusEl = document.getElementById('dailyStatus');
+            if (!statusEl) return;
+
+            if (this.canOpenToday()) {
+                statusEl.innerHTML = `<span class="status-available">✨ Tu peux ouvrir une surprise aujourd'hui !</span>`;
+                statusEl.className = 'daily-status available';
+            } else {
+                const timeRemaining = this.getTimeUntilMidnight();
+                statusEl.innerHTML = `<span class="status-waiting">⏰ Prochaine surprise dans ${this.formatTimeRemaining(timeRemaining)}</span>`;
+                statusEl.className = 'daily-status waiting';
+            }
+        };
+
+        updateCountdown();
+        this.countdownInterval = setInterval(updateCountdown, 1000);
     }
 
     // ============================================
@@ -260,6 +329,17 @@ class AdventCalendar {
 
         // Hide category selection in admin mode
         document.getElementById('categorySection').classList.toggle('hidden', this.isAdmin);
+
+        // Show/hide daily status (only for user mode)
+        const dailyStatusEl = document.getElementById('dailyStatus');
+        if (dailyStatusEl) {
+            dailyStatusEl.classList.toggle('hidden', this.isAdmin);
+        }
+
+        // Start countdown timer for user mode
+        if (!this.isAdmin) {
+            this.startCountdownTimer();
+        }
 
         this.updateUI();
     }
@@ -488,6 +568,13 @@ class AdventCalendar {
     handleCategorySelect(category) {
         if (this.isAdmin) return;
 
+        // Check daily limit
+        if (!this.canOpenToday()) {
+            const timeRemaining = this.getTimeUntilMidnight();
+            alert(`Tu as déjà ouvert ta surprise du jour ! 🎁\n\nProchaine surprise disponible dans ${this.formatTimeRemaining(timeRemaining)}`);
+            return;
+        }
+
         const nextDay = this.getNextAvailableDay();
         if (!nextDay) {
             alert('Les 25 jours ont été ouverts ! 🎉');
@@ -500,6 +587,9 @@ class AdventCalendar {
             return;
         }
 
+        // Mark as opened today
+        this.markOpenedToday();
+
         // Assign gift to day
         this.openedDays[nextDay] = {
             category: category,
@@ -507,6 +597,9 @@ class AdventCalendar {
             openedAt: new Date().toISOString()
         };
         this.saveOpenedDays();
+
+        // Update countdown display
+        this.startCountdownTimer();
 
         // Celebration!
         this.celebrate();

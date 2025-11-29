@@ -1243,6 +1243,64 @@ body {
 }
 
 /* ============================================
+   DAILY STATUS
+   ============================================ */
+.daily-status {
+    padding: 1rem 1.5rem;
+    border-radius: 16px;
+    text-align: center;
+    font-weight: 600;
+    font-size: 1.1rem;
+    margin-bottom: 1.5rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    transition: all var(--transition-medium);
+}
+
+.daily-status.hidden {
+    display: none;
+}
+
+.daily-status.available {
+    background: linear-gradient(135deg, #d4edda, #c3e6cb);
+    color: #155724;
+    border: 2px solid #28a745;
+    animation: pulse-green 2s ease-in-out infinite;
+}
+
+.dark-theme .daily-status.available {
+    background: linear-gradient(135deg, rgba(40, 167, 69, 0.3), rgba(40, 167, 69, 0.2));
+    color: #7dcea0;
+    border-color: rgba(40, 167, 69, 0.5);
+}
+
+@keyframes pulse-green {
+    0%, 100% { box-shadow: 0 0 0 0 rgba(40, 167, 69, 0.4); }
+    50% { box-shadow: 0 0 0 10px rgba(40, 167, 69, 0); }
+}
+
+.daily-status.waiting {
+    background: linear-gradient(135deg, #fff3cd, #ffeeba);
+    color: #856404;
+    border: 2px solid #ffc107;
+}
+
+.dark-theme .daily-status.waiting {
+    background: linear-gradient(135deg, rgba(255, 193, 7, 0.3), rgba(255, 193, 7, 0.2));
+    color: #f0c674;
+    border-color: rgba(255, 193, 7, 0.5);
+}
+
+.status-available,
+.status-waiting {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+}
+
+/* ============================================
    CATEGORY SELECTION CARDS
    ============================================ */
 .category-selection-section {
