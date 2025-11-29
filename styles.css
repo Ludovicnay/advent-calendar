@@ -418,6 +418,115 @@ body {
     background: linear-gradient(135deg, var(--category-c), #9580c9);
 }
 
+/* Locked days (future dates) */
+.calendar-day.locked {
+    background: var(--bg-secondary);
+    border-color: var(--border-color);
+    opacity: 0.6;
+    cursor: not-allowed;
+}
+
+.calendar-day.locked:hover {
+    transform: none;
+    box-shadow: var(--shadow-soft);
+    border-color: var(--border-color);
+}
+
+.calendar-day.locked .day-number {
+    color: var(--text-muted);
+}
+
+.calendar-day.locked .day-icon {
+    opacity: 0.5;
+}
+
+/* Available days (can be opened) */
+.calendar-day.available {
+    background: var(--bg-card);
+    border-color: var(--accent-tertiary);
+    cursor: pointer;
+    animation: gentle-pulse 2s ease-in-out infinite;
+}
+
+.calendar-day.available:hover {
+    transform: translateY(-4px) scale(1.05);
+    box-shadow: var(--shadow-medium);
+    border-color: var(--accent-primary);
+}
+
+.calendar-day.available .day-icon {
+    animation: wiggle 1s ease-in-out infinite;
+}
+
+/* Today's day - special highlight */
+.calendar-day.today {
+    border-width: 3px;
+    border-color: var(--accent-primary);
+    box-shadow: 0 0 20px rgba(232, 117, 143, 0.4);
+    animation: today-glow 2s ease-in-out infinite;
+}
+
+.calendar-day.today::after {
+    content: '';
+    position: absolute;
+    top: -4px;
+    left: -4px;
+    right: -4px;
+    bottom: -4px;
+    border-radius: 18px;
+    border: 2px solid var(--accent-primary);
+    opacity: 0.5;
+    animation: pulse-ring 2s ease-in-out infinite;
+}
+
+@keyframes today-glow {
+    0%, 100% {
+        box-shadow: 0 0 20px rgba(232, 117, 143, 0.4);
+    }
+    50% {
+        box-shadow: 0 0 30px rgba(232, 117, 143, 0.6);
+    }
+}
+
+@keyframes pulse-ring {
+    0%, 100% {
+        transform: scale(1);
+        opacity: 0.5;
+    }
+    50% {
+        transform: scale(1.05);
+        opacity: 0.3;
+    }
+}
+
+@keyframes gentle-pulse {
+    0%, 100% {
+        transform: scale(1);
+    }
+    50% {
+        transform: scale(1.02);
+    }
+}
+
+/* Today badge */
+.day-today-badge {
+    position: absolute;
+    bottom: 4px;
+    left: 50%;
+    transform: translateX(-50%);
+    font-size: 0.6rem;
+    font-weight: 600;
+    color: var(--accent-primary);
+    white-space: nowrap;
+    background: rgba(255, 255, 255, 0.9);
+    padding: 2px 6px;
+    border-radius: 8px;
+}
+
+.dark-theme .day-today-badge {
+    background: rgba(42, 32, 48, 0.9);
+}
+
 .day-number {
     font-family: 'Playfair Display', serif;
     font-size: 1.75rem;
@@ -1293,8 +1402,21 @@ body {
     border-color: rgba(255, 193, 7, 0.5);
 }
 
+.daily-status.finished {
+    background: linear-gradient(135deg, #e8758f, #c45c75);
+    color: white;
+    border: 2px solid var(--accent-primary);
+}
+
+.dark-theme .daily-status.finished {
+    background: linear-gradient(135deg, rgba(232, 117, 143, 0.4), rgba(196, 92, 117, 0.3));
+    color: #f4a5b8;
+    border-color: rgba(232, 117, 143, 0.5);
+}
+
 .status-available,
-.status-waiting {
+.status-waiting,
+.status-finished {
     display: flex;
     align-items: center;
     gap: 0.5rem;

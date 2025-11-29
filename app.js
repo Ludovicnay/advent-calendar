@@ -16,6 +16,7 @@ class AdventCalendar {
         this.editingCategory = null;
         this.currentImageData = null; // For image upload
         this.isAccessGranted = false;
+        this.pendingDay = null; // Day waiting for category selection
 
         // IMPORTANT: Change this password to your own!
         // This is the global access password for the calendar
@@ -95,71 +96,118 @@ class AdventCalendar {
     }
 
     // ============================================
-    // DAILY LIMIT SYSTEM
+    // DATE-BASED ADVENT CALENDAR SYSTEM
     // ============================================
 
-    getTodayDateString() {
-        const today = new Date();
-        return today.toISOString().split('T')[0]; // Format: YYYY-MM-DD
+    // Get current advent day (1-25 based on December date)
+    getCurrentAdventDay() {
+        const now = new Date();
+        const month = now.getMonth(); // 0-11
+        const day = now.getDate(); // 1-31
+
+        // December = month 11
+        if (month === 11 && day >= 1 && day <= 25) {
+            return day;
+        }
+
+        // Before December 1st
+        if (month < 11 || (month === 11 && day < 1)) {
+            return 0; // Not yet started
+        }
+
+        // After December 25th
+        return 25; // Calendar is over
     }
 
-    canOpenToday() {
-        // Admin can always open
+    // Check if a specific day can be opened
+    canOpenDay(day) {
+        // Admin can always open any day
         if (this.isAdmin) return true;
 
-        const today = this.getTodayDateString();
-        return this.lastOpenDate !== today;
+        const currentAdventDay = this.getCurrentAdventDay();
+
+        // Can only open days up to and including today's date
+        return day <= currentAdventDay;
     }
 
-    markOpenedToday() {
-        const today = this.getTodayDateString();
-        this.lastOpenDate = today;
-        localStorage.setItem('adventLastOpenDate', today);
-    }
+    // Check if today's day is available to open (not yet opened)
+    getTodayOpenableDay() {
+        const currentAdventDay = this.getCurrentAdventDay();
 
-    getTimeUntilMidnight() {
-        const now = new Date();
-        const midnight = new Date(now);
-        midnight.setHours(24, 0, 0, 0);
-        return midnight - now;
-    }
+        if (currentAdventDay === 0) return null; // Not December yet
+        if (currentAdventDay > 25) return null; // Past Christmas
 
-    formatTimeRemaining(ms) {
-        const hours = Math.floor(ms / (1000 * 60 * 60));
-        const minutes = Math.floor((ms % (1000 * 60 * 60)) / (1000 * 60));
-        const seconds = Math.floor((ms % (1000 * 60)) / 1000);
-
-        if (hours > 0) {
-            return `${hours}h ${minutes}min`;
-        } else if (minutes > 0) {
-            return `${minutes}min ${seconds}s`;
-        } else {
-            return `${seconds}s`;
+        // Return today if not opened, otherwise null
+        if (!this.openedDays[currentAdventDay]) {
+            return currentAdventDay;
         }
+
+        return null; // Already opened today
     }
 
-    startCountdownTimer() {
+    // Get status message for the daily status banner
+    getDailyStatusInfo() {
+        const currentAdventDay = this.getCurrentAdventDay();
+        const now = new Date();
+
+        if (currentAdventDay === 0) {
+            // Calculate days until December 1st
+            const dec1 = new Date(now.getFullYear(), 11, 1);
+            if (now > dec1) {
+                dec1.setFullYear(dec1.getFullYear() + 1);
+            }
+            const daysUntil = Math.ceil((dec1 - now) / (1000 * 60 * 60 * 24));
+            return {
+                type: 'waiting',
+                message: `⏰ Le calendrier commence dans ${daysUntil} jour${daysUntil > 1 ? 's' : ''} !`
+            };
+        }
+
+        if (currentAdventDay > 25) {
+            return {
+                type: 'finished',
+                message: '🎄 Le calendrier de l\'Avent est terminé ! Joyeux Noël !'
+            };
+        }
+
+        // Check if today's day is already opened
+        if (this.openedDays[currentAdventDay]) {
+            if (currentAdventDay === 25) {
+                return {
+                    type: 'finished',
+                    message: '🎄 Tu as ouvert toutes les surprises ! Joyeux Noël !'
+                };
+            }
+            return {
+                type: 'waiting',
+                message: `✅ Jour ${currentAdventDay} ouvert ! Reviens demain pour le jour ${currentAdventDay + 1}`
+            };
+        }
+
+        return {
+            type: 'available',
+            message: `✨ Jour ${currentAdventDay} disponible ! Ouvre ta surprise du jour !`
+        };
+    }
+
+    updateDailyStatus() {
+        const statusEl = document.getElementById('dailyStatus');
+        if (!statusEl || this.isAdmin) return;
+
+        const status = this.getDailyStatusInfo();
+        statusEl.innerHTML = `<span class="status-${status.type}">${status.message}</span>`;
+        statusEl.className = `daily-status ${status.type}`;
+    }
+
+    startStatusTimer() {
         // Clear existing timer
         if (this.countdownInterval) {
             clearInterval(this.countdownInterval);
         }
 
-        const updateCountdown = () => {
-            const statusEl = document.getElementById('dailyStatus');
-            if (!statusEl) return;
-
-            if (this.canOpenToday()) {
-                statusEl.innerHTML = `<span class="status-available">✨ Tu peux ouvrir une surprise aujourd'hui !</span>`;
-                statusEl.className = 'daily-status available';
-            } else {
-                const timeRemaining = this.getTimeUntilMidnight();
-                statusEl.innerHTML = `<span class="status-waiting">⏰ Prochaine surprise dans ${this.formatTimeRemaining(timeRemaining)}</span>`;
-                statusEl.className = 'daily-status waiting';
-            }
-        };
-
-        updateCountdown();
-        this.countdownInterval = setInterval(updateCountdown, 1000);
+        this.updateDailyStatus();
+        // Update every minute
+        this.countdownInterval = setInterval(() => this.updateDailyStatus(), 60000);
     }
 
     // ============================================
@@ -327,8 +375,12 @@ class AdventCalendar {
         });
         document.getElementById('adminNotice').classList.toggle('hidden', !this.isAdmin);
 
-        // Hide category selection in admin mode
-        document.getElementById('categorySection').classList.toggle('hidden', this.isAdmin);
+        // Hide category selection by default (show when clicking on an available day)
+        // For admin, always show it
+        document.getElementById('categorySection').classList.toggle('hidden', !this.isAdmin);
+
+        // Reset category section titles
+        this.resetCategorySectionTitles();
 
         // Show/hide daily status (only for user mode)
         const dailyStatusEl = document.getElementById('dailyStatus');
@@ -336,9 +388,9 @@ class AdventCalendar {
             dailyStatusEl.classList.toggle('hidden', this.isAdmin);
         }
 
-        // Start countdown timer for user mode
+        // Start status timer for user mode
         if (!this.isAdmin) {
-            this.startCountdownTimer();
+            this.startStatusTimer();
         }
 
         this.updateUI();
@@ -398,37 +450,106 @@ class AdventCalendar {
 
     renderCalendar() {
         this.calendarGrid.innerHTML = '';
+        const currentAdventDay = this.getCurrentAdventDay();
 
-        // Only show opened days
-        const openedDayNumbers = Object.keys(this.openedDays).map(Number).sort((a, b) => a - b);
-
-        if (openedDayNumbers.length === 0) {
-            this.calendarGrid.innerHTML = `
-                <div class="empty-calendar">
-                    <p>✨ Aucune surprise ouverte ! ✨</p>
-                    <p>Choisis une catégorie ci-dessus pour découvrir ta première surprise !</p>
-                </div>
-            `;
-            return;
-        }
-
-        openedDayNumbers.forEach(day => {
-            const dayData = this.openedDays[day];
+        // Show all 25 days with different states
+        for (let day = 1; day <= 25; day++) {
             const dayEl = document.createElement('div');
-            dayEl.className = `calendar-day opened category-${dayData.category.toLowerCase()}-opened`;
             dayEl.dataset.day = day;
 
+            const isOpened = this.openedDays[day];
+            const canOpen = this.canOpenDay(day);
+            const isToday = day === currentAdventDay;
             const hasNote = this.notes[day];
 
-            dayEl.innerHTML = `
-                <span class="day-number">${day}</span>
-                <span class="day-icon">${dayData.giftData.emoji || '🎁'}</span>
-                ${hasNote ? '<span class="day-note-indicator">📝</span>' : ''}
-            `;
+            if (isOpened) {
+                // Day has been opened - show the gift
+                const dayData = this.openedDays[day];
+                dayEl.className = `calendar-day opened category-${dayData.category.toLowerCase()}-opened`;
+                dayEl.innerHTML = `
+                    <span class="day-number">${day}</span>
+                    <span class="day-icon">${dayData.giftData.emoji || '🎁'}</span>
+                    ${hasNote ? '<span class="day-note-indicator">📝</span>' : ''}
+                `;
+                dayEl.addEventListener('click', () => this.showSurprise(day));
+            } else if (canOpen || this.isAdmin) {
+                // Day can be opened (today or past, or admin mode)
+                dayEl.className = `calendar-day available${isToday ? ' today' : ''}`;
+                dayEl.innerHTML = `
+                    <span class="day-number">${day}</span>
+                    <span class="day-icon">${isToday ? '🎁' : '🎄'}</span>
+                    ${isToday ? '<span class="day-today-badge">Aujourd\'hui!</span>' : ''}
+                `;
+                dayEl.addEventListener('click', () => this.handleDayClick(day));
+            } else {
+                // Day is locked (future day)
+                dayEl.className = 'calendar-day locked';
+                dayEl.innerHTML = `
+                    <span class="day-number">${day}</span>
+                    <span class="day-icon">🔒</span>
+                `;
+                dayEl.addEventListener('click', () => {
+                    alert(`Le jour ${day} sera disponible le ${day} décembre ! 📅`);
+                });
+            }
 
-            dayEl.addEventListener('click', () => this.showSurprise(day));
             this.calendarGrid.appendChild(dayEl);
-        });
+        }
+    }
+
+    handleDayClick(day) {
+        const currentAdventDay = this.getCurrentAdventDay();
+
+        // Admin can always open any day
+        if (!this.isAdmin) {
+            // Check if this day is in the future
+            if (day > currentAdventDay) {
+                alert(`Le jour ${day} sera disponible le ${day} décembre ! 📅`);
+                return;
+            }
+
+            // Check if trying to open a past day that wasn't opened
+            if (day < currentAdventDay && !this.openedDays[day]) {
+                alert(`Tu as manqué le jour ${day} ! Tu ne peux ouvrir que le jour actuel. 😢`);
+                return;
+            }
+        }
+
+        // Show category selection for this day
+        this.pendingDay = day;
+        this.showCategorySelectionForDay(day);
+    }
+
+    showCategorySelectionForDay(day) {
+        // Show the category section
+        const categorySection = document.getElementById('categorySection');
+        categorySection.classList.remove('hidden');
+
+        // Update the category section title for this specific day
+        const sectionTitle = document.querySelector('#categorySection .section-title');
+        const sectionSubtitle = document.querySelector('#categorySection .section-subtitle');
+
+        if (sectionTitle) {
+            sectionTitle.textContent = `✨ Jour ${day} - Choisis ta Catégorie ✨`;
+        }
+        if (sectionSubtitle) {
+            sectionSubtitle.textContent = 'Sélectionne une catégorie pour découvrir ta surprise !';
+        }
+
+        // Scroll to category selection
+        categorySection.scrollIntoView({ behavior: 'smooth' });
+    }
+
+    resetCategorySectionTitles() {
+        const sectionTitle = document.querySelector('#categorySection .section-title');
+        const sectionSubtitle = document.querySelector('#categorySection .section-subtitle');
+
+        if (sectionTitle) {
+            sectionTitle.textContent = '✨ Choisis l\'Aventure du Jour ✨';
+        }
+        if (sectionSubtitle) {
+            sectionSubtitle.textContent = 'Sélectionne une catégorie pour découvrir une surprise aléatoire !';
+        }
     }
 
     getCategoryName(category) {
@@ -566,17 +687,36 @@ class AdventCalendar {
     // ============================================
 
     handleCategorySelect(category) {
-        if (this.isAdmin) return;
+        // Determine which day to open
+        let dayToOpen;
 
-        // Check daily limit
-        if (!this.canOpenToday()) {
-            const timeRemaining = this.getTimeUntilMidnight();
-            alert(`Tu as déjà ouvert ta surprise du jour ! 🎁\n\nProchaine surprise disponible dans ${this.formatTimeRemaining(timeRemaining)}`);
-            return;
+        if (this.isAdmin) {
+            // Admin mode: use pendingDay or next available
+            dayToOpen = this.pendingDay || this.getNextAvailableDay();
+        } else {
+            // User mode: must be the current advent day
+            const currentAdventDay = this.getCurrentAdventDay();
+
+            if (currentAdventDay === 0) {
+                alert('Le calendrier de l\'Avent commence le 1er décembre ! 📅');
+                return;
+            }
+
+            if (currentAdventDay > 25) {
+                alert('Le calendrier de l\'Avent est terminé ! Joyeux Noël ! 🎄');
+                return;
+            }
+
+            // Check if today's day is already opened
+            if (this.openedDays[currentAdventDay]) {
+                alert(`Tu as déjà ouvert la surprise du jour ${currentAdventDay} ! 🎁\n\nReviens demain pour la prochaine surprise !`);
+                return;
+            }
+
+            dayToOpen = currentAdventDay;
         }
 
-        const nextDay = this.getNextAvailableDay();
-        if (!nextDay) {
+        if (!dayToOpen) {
             alert('Les 25 jours ont été ouverts ! 🎉');
             return;
         }
@@ -587,27 +727,33 @@ class AdventCalendar {
             return;
         }
 
-        // Mark as opened today
-        this.markOpenedToday();
-
         // Assign gift to day
-        this.openedDays[nextDay] = {
+        this.openedDays[dayToOpen] = {
             category: category,
             giftData: gift,
             openedAt: new Date().toISOString()
         };
         this.saveOpenedDays();
 
-        // Update countdown display
-        this.startCountdownTimer();
+        // Clear pending day
+        this.pendingDay = null;
+
+        // Hide category section and reset titles (only for user mode)
+        if (!this.isAdmin) {
+            document.getElementById('categorySection').classList.add('hidden');
+            this.resetCategorySectionTitles();
+        }
+
+        // Update status display
+        this.updateDailyStatus();
 
         // Celebration!
         this.celebrate();
 
         // Show the surprise
         setTimeout(() => {
-            this.currentDay = nextDay;
-            this.showSurprise(nextDay);
+            this.currentDay = dayToOpen;
+            this.showSurprise(dayToOpen);
             this.updateUI();
         }, 500);
     }
