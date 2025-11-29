@@ -1,0 +1,323 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Notre Calendrier de l'Avent 2024</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=Quicksand:wght@400;500;600&display=swap" rel="stylesheet">
+</head>
+<body class="light-theme">
+    <!-- Snowflakes background -->
+    <div class="snowflakes" aria-hidden="true">
+        <div class="snowflake">❄</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❄</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❄</div>
+        <div class="snowflake">❅</div>
+        <div class="snowflake">❆</div>
+        <div class="snowflake">❄</div>
+    </div>
+
+    <!-- Celebration overlay -->
+    <div class="celebration-overlay" id="celebrationOverlay">
+        <div class="confetti-container" id="confettiContainer"></div>
+    </div>
+
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-container">
+            <div class="login-header">
+                <h1>💝 Notre Calendrier de l'Avent 💝</h1>
+                <p>25 Jours d'Amour et de Surprises</p>
+            </div>
+            <div class="login-form">
+                <div class="login-tabs">
+                    <button class="login-tab active" data-tab="user">Mon Calendrier</button>
+                    <button class="login-tab" data-tab="admin">Mode Configuration</button>
+                </div>
+                <div class="login-content">
+                    <div class="login-field">
+                        <label>Entre ton prénom</label>
+                        <input type="text" id="loginName" placeholder="Ton prénom..." autocomplete="off">
+                    </div>
+                    <div class="login-field admin-only hidden">
+                        <label>Mot de passe admin</label>
+                        <input type="password" id="adminPassword" placeholder="Mot de passe pour configurer...">
+                    </div>
+                    <button class="btn btn-primary login-btn" id="loginBtn">
+                        <span class="user-login-text">Ouvrir Mon Calendrier 💕</span>
+                        <span class="admin-login-text hidden">Entrer en Mode Configuration 🔧</span>
+                    </button>
+                </div>
+            </div>
+            <div class="login-footer">
+                <p>Première visite ? Demande l'accès configuration à ton partenaire !</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div class="app-container hidden" id="appContainer">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="title">
+                    <span class="heart-icon">💝</span>
+                    <span id="welcomeTitle">Notre Calendrier de l'Avent</span>
+                    <span class="heart-icon">💝</span>
+                </h1>
+                <p class="subtitle" id="welcomeSubtitle">25 Jours d'Amour et de Surprises</p>
+            </div>
+            <div class="header-controls">
+                <button class="icon-btn" id="themeToggle" title="Changer le thème">
+                    <span class="theme-icon">🌙</span>
+                </button>
+                <button class="icon-btn admin-only-btn hidden" id="manageGiftsBtn" title="Gérer les cadeaux">
+                    <span>🎁</span>
+                </button>
+                <button class="icon-btn admin-only-btn hidden" id="exportBtn" title="Exporter le calendrier">
+                    <span>📤</span>
+                </button>
+                <button class="icon-btn admin-only-btn hidden" id="importBtn" title="Importer un calendrier">
+                    <span>📥</span>
+                </button>
+                <button class="icon-btn admin-only-btn hidden danger" id="resetBtn" title="Réinitialiser">
+                    <span>🔄</span>
+                </button>
+                <button class="icon-btn" id="logoutBtn" title="Déconnexion">
+                    <span>🚪</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- Admin Notice -->
+        <div class="admin-notice hidden" id="adminNotice">
+            <span>🔧</span> Mode Configuration - Ta partenaire ne verra pas les changements avant de rafraîchir
+        </div>
+
+        <!-- Category Selection (Main Action) -->
+        <section class="category-selection-section" id="categorySection">
+            <h2 class="section-title">✨ Choisis l'Aventure du Jour ✨</h2>
+            <p class="section-subtitle">Sélectionne une catégorie pour découvrir une surprise aléatoire !</p>
+            <div class="category-cards">
+                <button class="category-card category-a" data-category="A">
+                    <div class="category-card-icon">🏠</div>
+                    <h3>Ensemble en Personne</h3>
+                    <p>Expériences partagées, sorties, activités</p>
+                    <div class="category-remaining">
+                        <span id="remainingA">25</span> surprises restantes
+                    </div>
+                </button>
+                <button class="category-card category-b" data-category="B">
+                    <div class="category-card-icon">💌</div>
+                    <h3>À Distance</h3>
+                    <p>Connexion virtuelle, messages, surprises</p>
+                    <div class="category-remaining">
+                        <span id="remainingB">25</span> surprises restantes
+                    </div>
+                </button>
+                <button class="category-card category-c" data-category="C">
+                    <div class="category-card-icon">🌙</div>
+                    <h3>Soirée Ensemble</h3>
+                    <p>Moments romantiques en soirée</p>
+                    <div class="category-remaining">
+                        <span id="remainingC">25</span> surprises restantes
+                    </div>
+                </button>
+            </div>
+        </section>
+
+        <!-- Progress Section -->
+        <section class="progress-section">
+            <h2 class="section-title">🎄 Notre Voyage de Décembre 🎄</h2>
+            <div class="progress-overview">
+                <div class="progress-stat">
+                    <span class="progress-stat-number" id="totalOpened">0</span>
+                    <span class="progress-stat-label">Jours Ouverts</span>
+                </div>
+                <div class="progress-stat">
+                    <span class="progress-stat-number" id="totalRemaining">25</span>
+                    <span class="progress-stat-label">Jours Restants</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Calendar Grid (Shows opened days) -->
+        <section class="calendar-section">
+            <h2 class="section-title">📅 Surprises Découvertes 📅</h2>
+            <div class="calendar-grid" id="calendarGrid">
+                <!-- Days will be generated by JavaScript -->
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <p>Fait avec 💕 pour la personne la plus merveilleuse</p>
+        </footer>
+    </div>
+
+    <!-- Surprise Reveal Modal -->
+    <div class="modal-overlay" id="surpriseModal">
+        <div class="modal surprise-modal">
+            <div class="surprise-header">
+                <div class="surprise-day-badge">Jour <span id="surpriseDayNumber">1</span></div>
+                <div class="surprise-category-badge" id="surpriseCategoryBadge">Ensemble en Personne</div>
+            </div>
+            <div class="surprise-content" id="surpriseContent">
+                <!-- Surprise content will be injected here -->
+            </div>
+            <div class="surprise-actions">
+                <button class="btn btn-secondary" id="addNoteBtn">📝 Ajouter une Note</button>
+                <button class="btn btn-primary" id="closeSurpriseModal">Fermer avec Amour 💕</button>
+            </div>
+            <button class="modal-close" id="closeSurpriseX">×</button>
+        </div>
+    </div>
+
+    <!-- Note Modal -->
+    <div class="modal-overlay" id="noteModal">
+        <div class="modal note-modal">
+            <div class="modal-header">
+                <h2>📝 Ta Note Personnelle</h2>
+                <p>Jour <span id="noteDayNumber">1</span></p>
+            </div>
+            <div class="modal-body">
+                <textarea id="noteTextarea" placeholder="Écris tes pensées, souvenirs ou sentiments sur cette journée..."></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancelNote">Annuler</button>
+                <button class="btn btn-primary" id="saveNote">Sauvegarder 💝</button>
+            </div>
+            <button class="modal-close" id="closeNoteModal">×</button>
+        </div>
+    </div>
+
+    <!-- Gift Pool Management Modal (Admin) -->
+    <div class="modal-overlay" id="giftPoolModal">
+        <div class="modal gift-pool-modal">
+            <div class="modal-header">
+                <h2>🎁 Gérer les Cadeaux</h2>
+                <p>Ajoute des surprises pour chaque catégorie</p>
+            </div>
+            <div class="gift-pool-tabs">
+                <button class="gift-tab active" data-category="A">🏠 Ensemble</button>
+                <button class="gift-tab" data-category="B">💌 À Distance</button>
+                <button class="gift-tab" data-category="C">🌙 Soirée</button>
+            </div>
+            <div class="gift-pool-content">
+                <div class="gift-pool-list" id="giftPoolList">
+                    <!-- Gifts will be listed here -->
+                </div>
+                <button class="btn btn-secondary add-gift-btn" id="addGiftBtn">+ Ajouter un Cadeau</button>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" id="closeGiftPoolModal">Terminé</button>
+            </div>
+            <button class="modal-close" id="closeGiftPoolX">×</button>
+        </div>
+    </div>
+
+    <!-- Edit Gift Modal -->
+    <div class="modal-overlay" id="editGiftModal">
+        <div class="modal edit-modal">
+            <div class="modal-header">
+                <h2>✏️ <span id="editGiftTitle">Ajouter un Cadeau</span></h2>
+                <p id="editGiftCategory">Catégorie A</p>
+            </div>
+            <div class="modal-body edit-body">
+                <div class="edit-field">
+                    <label>Titre *</label>
+                    <input type="text" id="editTitle" placeholder="Titre de la surprise...">
+                </div>
+                <div class="edit-field">
+                    <label>Emoji</label>
+                    <input type="text" id="editEmoji" placeholder="🎁">
+                </div>
+                <div class="edit-field">
+                    <label>Description / Message d'amour *</label>
+                    <textarea id="editDescription" placeholder="Écris ton message..."></textarea>
+                </div>
+                <div class="edit-field">
+                    <label>Lien (optionnel)</label>
+                    <input type="url" id="editLink" placeholder="https://...">
+                    <input type="text" id="editLinkText" placeholder="Texte du lien...">
+                </div>
+                <div class="edit-field">
+                    <label>Défi / Challenge (optionnel)</label>
+                    <textarea id="editTask" placeholder="Un défi amusant..."></textarea>
+                </div>
+                <div class="edit-field">
+                    <label>Indice Cadeau (optionnel)</label>
+                    <input type="text" id="editGift" placeholder="Description ou indice du cadeau...">
+                </div>
+                <div class="edit-field">
+                    <label>Image (optionnel) - Photo de lettre, etc.</label>
+                    <div class="image-upload-area" id="imageUploadArea">
+                        <input type="file" id="editImage" accept="image/*" style="display: none;">
+                        <div class="image-preview" id="imagePreview">
+                            <span class="upload-placeholder">📷 Cliquez pour ajouter une image</span>
+                        </div>
+                        <button type="button" class="btn btn-secondary btn-small" id="removeImageBtn" style="display: none;">🗑️ Supprimer l'image</button>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-danger" id="deleteGift">🗑️ Supprimer</button>
+                <button class="btn btn-secondary" id="cancelEditGift">Annuler</button>
+                <button class="btn btn-primary" id="saveEditGift">Sauvegarder 💝</button>
+            </div>
+            <button class="modal-close" id="closeEditGiftModal">×</button>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div class="modal-overlay" id="importModal">
+        <div class="modal import-modal">
+            <div class="modal-header">
+                <h2>📥 Importer un Calendrier</h2>
+                <p>Colle les données exportées ci-dessous</p>
+            </div>
+            <div class="modal-body">
+                <textarea id="importTextarea" placeholder="Colle ton JSON ici..."></textarea>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-secondary" id="cancelImport">Annuler</button>
+                <button class="btn btn-primary" id="confirmImport">Importer 📥</button>
+            </div>
+            <button class="modal-close" id="closeImportModal">×</button>
+        </div>
+    </div>
+
+    <!-- Password Setup Modal -->
+    <div class="modal-overlay" id="passwordModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h2>🔐 Créer un Mot de Passe</h2>
+                <p>Ce mot de passe protège la configuration des cadeaux</p>
+            </div>
+            <div class="modal-body">
+                <div class="edit-field">
+                    <label>Nouveau mot de passe</label>
+                    <input type="password" id="newPassword" placeholder="Entre ton mot de passe...">
+                </div>
+                <div class="edit-field">
+                    <label>Confirmer le mot de passe</label>
+                    <input type="password" id="confirmPassword" placeholder="Confirme le mot de passe...">
+                </div>
+            </div>
+            <div class="modal-actions">
+                <button class="btn btn-primary" id="savePassword">Sauvegarder 🔒</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
