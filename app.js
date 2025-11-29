@@ -15,6 +15,11 @@ class AdventCalendar {
         this.editingGiftIndex = null;
         this.editingCategory = null;
         this.currentImageData = null; // For image upload
+        this.isAccessGranted = false;
+
+        // IMPORTANT: Change this password to your own!
+        // This is the global access password for the calendar
+        this.globalAccessPassword = 'patapouf';
 
         // Load saved data
         this.theme = localStorage.getItem('adventTheme') || 'light';
@@ -24,6 +29,7 @@ class AdventCalendar {
         this.notes = this.loadNotes();
 
         // DOM Elements
+        this.accessScreen = document.getElementById('accessScreen');
         this.loginScreen = document.getElementById('loginScreen');
         this.appContainer = document.getElementById('appContainer');
         this.calendarGrid = document.getElementById('calendarGrid');
@@ -42,7 +48,49 @@ class AdventCalendar {
     init() {
         this.applyTheme();
         this.bindEvents();
-        this.checkAutoLogin();
+        this.checkAccess();
+    }
+
+    // ============================================
+    // GLOBAL ACCESS
+    // ============================================
+
+    checkAccess() {
+        const accessGranted = sessionStorage.getItem('adventAccessGranted');
+        if (accessGranted === 'true') {
+            this.isAccessGranted = true;
+            this.showLoginScreen();
+            this.checkAutoLogin();
+        } else {
+            this.showAccessScreen();
+        }
+    }
+
+    showAccessScreen() {
+        this.accessScreen.classList.remove('hidden');
+        this.loginScreen.classList.add('hidden');
+        this.appContainer.classList.add('hidden');
+    }
+
+    showLoginScreen() {
+        this.accessScreen.classList.add('hidden');
+        this.loginScreen.classList.remove('hidden');
+        this.appContainer.classList.add('hidden');
+    }
+
+    verifyAccess() {
+        const password = document.getElementById('accessPassword').value;
+
+        if (password === this.globalAccessPassword) {
+            this.isAccessGranted = true;
+            sessionStorage.setItem('adventAccessGranted', 'true');
+            this.showLoginScreen();
+            this.checkAutoLogin();
+        } else {
+            alert('Mot de passe incorrect ! 🔒');
+            document.getElementById('accessPassword').value = '';
+            document.getElementById('accessPassword').focus();
+        }
     }
 
     // ============================================
@@ -317,6 +365,12 @@ class AdventCalendar {
     // ============================================
 
     bindEvents() {
+        // Access screen
+        document.getElementById('accessBtn').addEventListener('click', () => this.verifyAccess());
+        document.getElementById('accessPassword').addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') this.verifyAccess();
+        });
+
         // Login tabs
         document.querySelectorAll('.login-tab').forEach(tab => {
             tab.addEventListener('click', (e) => {
