@@ -269,6 +269,36 @@ class AdventCalendar {
         localStorage.setItem('adventOpenedDays', JSON.stringify(this.openedDays));
     }
 
+    // Sync with server database
+    async syncFromServer() {
+        try {
+            const response = await fetch('/api/history');
+            if (response.ok) {
+                const serverData = await response.json();
+                // Merge server data with local (server wins)
+                this.openedDays = { ...this.openedDays, ...serverData };
+                this.saveOpenedDays();
+                this.updateUI();
+                console.log('Synced from server:', Object.keys(serverData).length, 'days');
+            }
+        } catch (err) {
+            console.log('Server sync unavailable, using local data');
+        }
+    }
+
+    async saveToServer(dayNumber, category, giftData) {
+        try {
+            await fetch('/api/history', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ dayNumber, category, giftData })
+            });
+            console.log('Saved to server: day', dayNumber);
+        } catch (err) {
+            console.log('Could not save to server, saved locally');
+        }
+    }
+
     loadNotes() {
         const saved = localStorage.getItem('adventNotes');
         return saved ? JSON.parse(saved) : {};
@@ -354,6 +384,9 @@ class AdventCalendar {
         }
 
         this.updateUI();
+
+        // Sync with server database
+        this.syncFromServer();
     }
 
     // ============================================
@@ -668,6 +701,9 @@ class AdventCalendar {
             openedAt: new Date().toISOString()
         };
         this.saveOpenedDays();
+
+        // Save to server database (for sync across devices)
+        this.saveToServer(dayToOpen, category, gift);
 
         // Clear pending day
         this.pendingDay = null;
