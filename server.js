@@ -112,6 +112,24 @@ app.post('/api/history', async (req, res) => {
     }
 });
 
+// Reset all opened days (admin only)
+app.post('/api/reset', async (req, res) => {
+    const { adminPassword } = req.body;
+
+    // Verify admin password
+    if (adminPassword !== 'admin!') {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    try {
+        await pool.query('DELETE FROM opened_days');
+        res.json({ success: true, message: 'All history cleared' });
+    } catch (err) {
+        console.error('Error resetting:', err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
 // Serve static files
 app.use(express.static(path.join(__dirname), {
     extensions: ['html'],
