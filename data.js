@@ -42,8 +42,28 @@ const DEFAULT_GIFT_POOL = {
             title: "Un esprit sain dans un corps sain",
             description: "On travaille beaucoup tous les deux et toi particulièrement alors pour ton prochain cadeau rendez-vous là où on range le poulet et le poisson !",
             task: "À utiliser ensemble pour une session détente !"
+        },
+        {
+            emoji: "🍹",
+            title: "Drink'up",
+            description: "Ce soir, cocktail (ou chocolat chaud) de Noël ! On invente un cocktail ou on fait un chocolat chaud maison !",
+            task: "Du temps de qualité ensemble avec du chocolat sur le bout du nez!"
+        },
+        {
+            emoji: "🫂",
+            title: "Gaté bébou",
+            description: "On est souvent éloigné toi et moi mais aujourd'hui on est ensemble alors fait moi un gros calin qui dure longtemps ! chi-coração !",
+            task: ""
+        },
+        {
+            emoji: "🍫",
+            title: "Un petit chocolat pour rester au chaud",
+            description: "On chasse les oeuf à Noël ? Je vais gacher 30 oeufs en chocolat dans le salon et si tu les retrouves tous tu gagnes. Sinon c'est moi qui gagne !",
+            task: "Le gagnant fait le repas vétu uniquement d'un tablier."
         }
-       
+
+
+
     ],
 
     // ============================================
@@ -58,13 +78,6 @@ const DEFAULT_GIFT_POOL = {
             link: "https://share.icloud.com/photos/04e0pbZ0Me3_xAwABBN-Js8_Q",
             linkText: "Voir notre album photo"
         },
-       /* {
-            emoji: "🌍",
-            title: "Souvenirs de Voyage",
-            description: "Te souviens-tu de ce petit week end à Milan incroyable qu'on a fait ensemble ? J'ai rassemblé nos plus belles photos pour qu'on puisse se remémorer ces moments magiques. Chaque image me rappelle pourquoi je t'aime tant.",
-            link: "#",
-            linkText: "Revivre notre voyage"
-        },*/
         {
             emoji: "💌",
             title: "Mon cœur en site",
@@ -82,6 +95,13 @@ const DEFAULT_GIFT_POOL = {
             title: "Promesse de Noël",
             description: "Je te promets d'être toujours là, de te soutenir dans tes projets, de te faire rire quand tu es triste, et de t'aimer un peu plus chaque jour. Notre amour est ma plus grande force !",
             task: ""
+        },
+        {
+            emoji: "📸",
+            title: "Finalement l'italie c'est un incontournable de notre vie !",
+            description: "Un condensé de nos aventures italienne !",
+            link: "https://share.icloud.com/photos/0879ot38-FEmu4WK8BHzwOkjg",
+            linkText: "Voir notre album photo"
         },
         {
             emoji: "☀️",
@@ -107,6 +127,12 @@ const DEFAULT_GIFT_POOL = {
             title: "Warrior",
             description: "Ce matin regarde toi dans un miroir et vois toi comme moi je te vois ! Une femme fort, avec un corps de rève et surtout une force intérieur de malade ! Sois fier de toi pendant 3 minutes et surtout de tout ce que tu accomplies !",
             task: ""
+        },
+        {
+            emoji: "🛏️",
+            title: "Reverse calendrier de l'avant",
+            description: "Aujourd'hui est un piège, c'est un reverse calendrier ! Pas de chocolats, de cadeaux ou autre juste un gage ! Ce soir prend un snap le plus sexy possible ! Plus c'est inédit et sexy mieux c'est !",
+            task: "J'arrivais à cours d'inspirations ! Au moins là je sais que je te surprend !"
         }
     ],
 
@@ -147,7 +173,24 @@ const DEFAULT_GIFT_POOL = {
             description: "Tamise les lumières, met de la musique douce, et on se détend ce soir. Tu mérites ce moment de relaxation ma championne.",
             task: "Récupère ton cadeau là ou tu ranges tes boules de bain !",
             gift: "Inclus le masseur."
+        },
+        {
+            emoji: "💆‍♀️",
+            title: "Un noël détendu !",
+            description: "Tamise les lumières, met de la musique douce, et on se détend ce soir. Tu mérites ce moment de relaxation ma championne.",
+            task: "Récupère ton cadeau là ou tu ranges tes boules de bain !",
+            gift: "Inclus le masseur."
+        },
+        {
+            emoji: "🕹️",
+            title: "Game on !",
+            description: "Choisi ton jeux et prépare toi ! On se la met ! Choisi le jeux et les règles, je vais t'écraser ! Celui qui perd doit un jocker à l'autre",
+            task: "",
+            gift: ""
         }
+
+
+
     ]
 };
 
