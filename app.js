@@ -246,11 +246,9 @@ class AdventCalendar {
     // ============================================
 
     loadGiftPools() {
-        const saved = localStorage.getItem('adventGiftPools');
-        if (saved) {
-            return JSON.parse(saved);
-        }
-        // Initialize with default data
+        // Always use default data from data.js
+        // This ensures everyone gets the same gift pool
+        // Admin modifications are only for the current session
         return {
             A: [...DEFAULT_GIFT_POOL.A],
             B: [...DEFAULT_GIFT_POOL.B],
