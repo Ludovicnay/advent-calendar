@@ -17,18 +17,18 @@ const DEFAULT_GIFT_POOL = {
             emoji: "🔮",
             title: "L'avenir appartient à ceux qui se lèvent tôt et ceux qui savent le lire",
             description: "Le cadeau du jour se trouve entre Miss Ynov et le couple de l'année !",
-            gift: "À déballer ensemble !"
+            gift: "En espérant que le tirage soit bon ! !"
         },
         {
             emoji: "🎨",
-            title: "Boubou <3",
+            title: "Boubou 🤗",
             description: "Attrape un bon verre de vin et prenons un moment pour mettre des couleurs dans nos vies ! Ton cadeau se trouve au même endroit que ce qui cache tes jolies fesses.",
             task: "Prépare les crayons de couleur et une bonne bouteille !"
         },
         {
             emoji: "📰",
             title: "La connaissance c'est le pouvoir",
-            description: "Aujourd'hui ton cadeau est là où tu pourrais décompresser ou juste t'enivrer. Tu travailles beaucoup alors il faut quand même garder un pied dans l'actualité !",
+            description: "Aujourd'hui ton cadeau est là où tu pourrais décompresser (ou juste t'enivrer). Tu travailles beaucoup alors il faut quand même garder un pied dans l'actualité !",
             gift: "Pour tes pauses bien méritées !"
         },
         {
@@ -40,9 +40,10 @@ const DEFAULT_GIFT_POOL = {
         {
             emoji: "✨",
             title: "Un esprit sain dans un corps sain",
-            description: "On travaille beaucoup tous les deux et toi particulièrement alors pour ton prochain cadeau rendez-vous là où tu ranges le poulet et le poisson !",
+            description: "On travaille beaucoup tous les deux et toi particulièrement alors pour ton prochain cadeau rendez-vous là où on range le poulet et le poisson !",
             task: "À utiliser ensemble pour une session détente !"
         }
+       
     ],
 
     // ============================================
@@ -52,54 +53,60 @@ const DEFAULT_GIFT_POOL = {
     B: [
         {
             emoji: "📸",
-            title: "Album Photo de Nous",
-            description: "Quand on est loin l'un de l'autre, j'aime repenser à tous nos moments ensemble. Voici un lien vers notre album photo pour te rappeler combien on est beaux et heureux ensemble. Regarde-le quand je te manque trop !",
+            title: "Garde la pèche, on est beaux ensemble !",
+            description: "Quand on est loin l'un de l'autre, je sais que tu aimes te remémorer nos moments ensemble. Voici un lien vers notre album photo pour te rappeler combien on est beaux et heureux ensemble. Regarde-le quand je te manque trop !",
             link: "https://share.icloud.com/photos/04e0pbZ0Me3_xAwABBN-Js8_Q",
             linkText: "Voir notre album photo"
         },
-        {
+       /* {
             emoji: "🌍",
             title: "Souvenirs de Voyage",
-            description: "Te souviens-tu de ce voyage incroyable qu'on a fait ensemble ? J'ai rassemblé nos plus belles photos pour qu'on puisse se remémorer ces moments magiques. Chaque image me rappelle pourquoi je t'aime tant.",
+            description: "Te souviens-tu de ce petit week end à Milan incroyable qu'on a fait ensemble ? J'ai rassemblé nos plus belles photos pour qu'on puisse se remémorer ces moments magiques. Chaque image me rappelle pourquoi je t'aime tant.",
             link: "#",
             linkText: "Revivre notre voyage"
-        },
+        },*/
         {
             emoji: "💌",
-            title: "Mon Cœur en Mots",
-            description: "Même quand on est loin, tu es toujours dans mes pensées. Tu es la personne la plus incroyable que je connaisse, et chaque jour je me sens chanceux de t'avoir dans ma vie. Tu me manques, mais savoir qu'on va se retrouver rend l'attente plus douce. Je t'aime.",
+            title: "Mon cœur en site",
+            description: "Dans une autre époque on s'enverrai des lettres, aujourd'hui je te fais un site Calendrier de l'avant ! Tu es la personne la plus incroyable que je connaisse, et chaque jour je me sens chanceux de t'avoir dans ma vie. Tu me manques, mais savoir qu'on va se retrouver rend l'attente plus douce. Je t'aime.",
             task: "Lis ce message quand je te manque trop ❤️"
         },
         {
             emoji: "🌟",
-            title: "Ce Que J'aime Chez Toi",
+            title: "Ce que j'aime chez toi",
             description: "J'aime ta façon de rire, ta détermination dans tout ce que tu fais, ta créativité sans limites, ta gentillesse envers les autres, et la lumière que tu apportes dans ma vie chaque jour. Tu es extraordinaire et je voulais que tu le saches.",
             task: "Garde ce message précieusement ✨"
         },
         {
             emoji: "💕",
-            title: "Promesse d'Amour",
-            description: "Je te promets d'être toujours là pour toi, de te soutenir dans tes projets, de te faire rire quand tu es triste, et de t'aimer un peu plus chaque jour. Notre amour est ma plus grande force. Vivement qu'on se retrouve !",
-            task: "On se fait un câlin virtuel ? 🤗"
+            title: "Promesse de Noël",
+            description: "Je te promets d'être toujours là, de te soutenir dans tes projets, de te faire rire quand tu es triste, et de t'aimer un peu plus chaque jour. Notre amour est ma plus grande force !",
+            task: ""
         },
         {
-            emoji: "🌙",
-            title: "Bonne Nuit Mon Amour",
-            description: "Même si on ne peut pas s'endormir ensemble ce soir, sache que tu es ma dernière pensée avant de dormir et ma première au réveil. Fais de beaux rêves, je serai dedans. Je t'aime plus que les mots ne peuvent le dire.",
+            emoji: "☀️",
+            title: "Bonne journée !",
+            description: "Même si on ne peut pas se lever ensemble ce matin, sache que tu es ma première pensée de la journée et la dernière avant de dormir. Eclate cette journée comme tu sais le faire. Je t'aime !",
             task: "Pense à moi avant de t'endormir 💤"
         },
         {
             emoji: "☀️",
-            title: "Bonjour Sunshine",
-            description: "Hello sunshine j'espère que tu as bien dormi ! Je voulais juste te dire que tu es incroyable et que cette journée va être géniale. Tu vas tout déchirer comme d'habitude. Je suis tellement fier de toi. Bonne journée mon cœur ! Explose cette journée !",
+            title: "Hello Sunshine",
+            description: "Hello sunshine j'espère que tu as bien dormi ! Je voulais juste te dire que tu es incroyable et que cette journée va être géniale. Tu vas tout déchirer comme d'habitude. Je suis tellement fier de toi. Explose cette journée !",
             link: "https://www.instagram.com/reel/DBX3MjsMy1a/",
             linkText: "Regarde cette vidéo pour toi 🎬"
         },
         {
             emoji: "💝",
-            title: "Countdown Mariage",
-            description: "Chaque jour qui passe nous rapproche de notre grand jour. Je n'arrive toujours pas à croire qu'on va se marier ! Tu es l'amour de ma vie et j'ai tellement hâte de commencer cette nouvelle aventure avec toi. Future Madame je t'aime !",
-            task: "On compte les jours ensemble !"
+            title: "Countdown",
+            description: "Chaque jour qui passe nous rapproche de notre grand jour. Je n'arrive toujours pas à croire qu'on va se marier ! J'ai tellement hâte de passer journée avec toi. Future Madame (peut importe le nom),je t'aime !",
+            task: ""
+        },
+        {
+            emoji: "💪",
+            title: "Warrior",
+            description: "Ce matin regarde toi dans un miroir et vois toi comme moi je te vois ! Une femme fort, avec un corps de rève et surtout une force intérieur de malade ! Sois fier de toi pendant 3 minutes et surtout de tout ce que tu accomplies !",
+            task: ""
         }
     ],
 
@@ -111,35 +118,35 @@ const DEFAULT_GIFT_POOL = {
         {
             emoji: "🎄",
             title: "Boule de Noël au Marché",
-            description: "Ce soir, on s'emmitouffle et on va au marché de Noël ensemble ! Mission : trouver LA boule de Noël parfaite pour nous. On pourra en profiter pour boire un vin chaud et admirer les lumières. Notre première décoration de couple !",
-            task: "Chacun propose 3 boules et on vote pour notre préférée !"
+            description: "Ce soir, on se couvre (avec ou sans body) et on va au marché de Noël ensemble ! Notre seul et unique mission : trouver LA boule de Noël 2025. On pourra en profiter pour boire un vin chaud et manger une crèpe (MêMe si elle sera moins bonne que celle au beurre-sucre-canelle de Strasbourg).",
+            task: ""
         },
         {
             emoji: "🍿",
-            title: "Soirée Ciné Cocooning",
+            title: "Soirée ciné cocooning",
             description: "Ce soir, c'est soirée cinéma à la maison ! On se fait des popcorns, on se blottit sous un plaid, et on regarde un bon film ensemble. Pas de téléphone, juste nous deux devant l'écran.",
-            task: "Chacun propose un film et on tire au sort !",
+            task: "Chi-fou-mi, celui qui gagne choisit le thème du film ! Alors on sera plus action ou film de Noël ?",
             gift: "Popcorns et boissons au programme 🍿"
         },
         {
             emoji: "🍞",
             title: "On met la main à la pâte",
-            description: "Ce soir c'est concours ! Le cadeau du jour est caché à côté du nutella ! Gratouille ou papouille pour le plus beau des deux !",
-            task: "Le plus beau pain d'épices gagne !",
-            gift: "Kit pain d'épices inclus !"
+            description: "Ce soir c'est concours ! Le cadeau du jour est caché à côté du nutella !",
+            task: "Le plus beau des deux gagne des gratouilles ou papouille !",
+            gift: "Kit inclus !"
         },
         {
             emoji: "🔥",
-            title: "Cadeau Coquin",
-            description: "Ce soir, j'ai une surprise un peu spéciale pour nous deux... 😏 Un cadeau à ouvrir ensemble quand on sera rien que tous les deux. Prépare-toi à une soirée mémorable !",
+            title: 'Hiver rude, foyer réchauffé',
+            description: "Pour réchauffer nos soirées, ton cadeau se trouve a coté de ta cravache pour rester dans le même thème ! Il n'est pas obligatoire de tout essayer ce soir, choisis tes armes et ta tenu.",
             task: "À ouvrir dans l'intimité uniquement... 💋"
         },
         {
             emoji: "💆",
-            title: "Huile de Massage Rituelle",
-            description: "Ce soir, on prend soin l'un de l'autre. J'ai une huile de massage rituelle pour nous. On tamise les lumières, on met de la musique douce, et on se détend avec un massage en duo. Tu mérites ce moment de relaxation.",
-            task: "Minimum 20 minutes de massage chacun !",
-            gift: "Huile de massage prête à l'emploi"
+            title: "Un noël détendu !",
+            description: "Tamise les lumières, met de la musique douce, et on se détend ce soir. Tu mérites ce moment de relaxation ma championne.",
+            task: "Récupère ton cadeau là ou tu ranges tes boules de bain !",
+            gift: "Inclus le masseur."
         }
     ]
 };
