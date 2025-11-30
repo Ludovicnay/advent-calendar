@@ -171,14 +171,7 @@ const DEFAULT_GIFT_POOL = {
             emoji: "💆",
             title: "Un noël détendu !",
             description: "Tamise les lumières, met de la musique douce, et on se détend ce soir. Tu mérites ce moment de relaxation ma championne.",
-            task: "Récupère ton cadeau là ou tu ranges tes boules de bain !",
-            gift: "Inclus le masseur."
-        },
-        {
-            emoji: "💆‍♀️",
-            title: "Un noël détendu !",
-            description: "Tamise les lumières, met de la musique douce, et on se détend ce soir. Tu mérites ce moment de relaxation ma championne.",
-            task: "Récupère ton cadeau là ou tu ranges tes boules de bain !",
+            task: "Récupère ton cadeau entre mèches à bougies et feutres de couleur !",
             gift: "Inclus le masseur."
         },
         {
