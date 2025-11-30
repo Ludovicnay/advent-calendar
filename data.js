@@ -15,32 +15,32 @@ const DEFAULT_GIFT_POOL = {
     A: [
         {
             emoji: "🔮",
-            title: "Livre de Tarot",
-            description: "Un magnifique livre avec des cartes de tarot rien que pour toi ! Je sais combien tu adores lire les cartes. Tu pourras les utiliser chez nous, tranquillement, quand tu veux te faire une petite séance divinatoire sans avoir à attendre d'être chez tes parents.",
+            title: "L'avenir appartient à ceux qui se lèvent tôt et ceux qui savent le lire",
+            description: "Le cadeau du jour se trouve entre Miss Ynov et le couple de l'année !",
             gift: "À déballer ensemble !"
         },
         {
             emoji: "🎨",
-            title: "Livre Boubou à Colorier",
-            description: "Tu te souviens de nos petits bonhommes Boubou qu'on s'envoie sur Instagram ? J'ai trouvé un livre entier à colorier ! Ça nous fera des soirées coloriage rigolotes avec un bon verre de vin. On pourra comparer nos œuvres d'art !",
+            title: "Boubou <3",
+            description: "Attrape un bon verre de vin et prenons un moment pour mettre des couleurs dans nos vies ! Ton cadeau se trouve au même endroit que ce qui cache tes jolies fesses.",
             task: "Prépare les crayons de couleur et une bonne bouteille !"
         },
         {
             emoji: "📰",
-            title: "BD Hugo Décrypte",
-            description: "Je sais que tu travailles tellement que tu n'as jamais le temps de regarder les infos. Ce livre d'Hugo Décrypte résume l'actualité en BD ! Comme ça tu peux te tenir informée sans y passer des heures, et en plus c'est illustré et fun à lire.",
+            title: "La connaissance c'est le pouvoir",
+            description: "Aujourd'hui ton cadeau est là où tu pourrais décompresser ou juste t'enivrer. Tu travailles beaucoup alors il faut quand même garder un pied dans l'actualité !",
             gift: "Pour tes pauses bien méritées !"
         },
         {
             emoji: "🌿",
-            title: "Déo Naturel",
-            description: "Le fameux déo que tu attends depuis un moment ! Je sais que tu le voulais, alors voilà, c'est chose faite. Un petit cadeau pratique mais qui te fera plaisir au quotidien.",
+            title: "Pas de cadeau utile",
+            description: "Ton cadeau du jour est là où tu ranges tes boules de bain ! Tu veux pas de cadeau utile à Noël alors arrangeons ça !",
             gift: "Enfin !"
         },
         {
             emoji: "✨",
-            title: "Patchs Aloe Vera Anti-Cernes",
-            description: "On travaille beaucoup tous les deux et il faut qu'on prenne soin de nous pour préparer notre mariage ! Ces patchs à l'aloe vera vont nous aider à avoir une mine resplendissante. On pourra se faire des petites sessions soin ensemble.",
+            title: "Un esprit sain dans un corps sain",
+            description: "On travaille beaucoup tous les deux et toi particulièrement alors pour ton prochain cadeau rendez-vous là où tu ranges le poulet et le poisson !",
             task: "À utiliser ensemble pour une session détente !"
         }
     ],
@@ -54,7 +54,7 @@ const DEFAULT_GIFT_POOL = {
             emoji: "📸",
             title: "Album Photo de Nous",
             description: "Quand on est loin l'un de l'autre, j'aime repenser à tous nos moments ensemble. Voici un lien vers notre album photo pour te rappeler combien on est beaux et heureux ensemble. Regarde-le quand je te manque trop !",
-            link: "#",
+            link: "https://share.icloud.com/photos/04e0pbZ0Me3_xAwABBN-Js8_Q",
             linkText: "Voir notre album photo"
         },
         {
@@ -91,13 +91,14 @@ const DEFAULT_GIFT_POOL = {
         {
             emoji: "☀️",
             title: "Bonjour Sunshine",
-            description: "J'espère que tu as bien dormi ! Je voulais juste te dire que tu es incroyable et que cette journée va être géniale. Tu vas tout déchirer comme d'habitude. Je suis tellement fier/fière de toi. Bonne journée mon cœur !",
-            task: "Attaque cette journée avec le sourire !"
+            description: "Hello sunshine j'espère que tu as bien dormi ! Je voulais juste te dire que tu es incroyable et que cette journée va être géniale. Tu vas tout déchirer comme d'habitude. Je suis tellement fier de toi. Bonne journée mon cœur ! Explose cette journée !",
+            link: "https://www.instagram.com/reel/DBX3MjsMy1a/",
+            linkText: "Regarde cette vidéo pour toi 🎬"
         },
         {
             emoji: "💝",
             title: "Countdown Mariage",
-            description: "Chaque jour qui passe nous rapproche de notre grand jour. Je n'arrive toujours pas à croire qu'on va se marier ! Tu es l'amour de ma vie et j'ai tellement hâte de commencer cette nouvelle aventure avec toi. Future Madame (ou Monsieur) je t'aime !",
+            description: "Chaque jour qui passe nous rapproche de notre grand jour. Je n'arrive toujours pas à croire qu'on va se marier ! Tu es l'amour de ma vie et j'ai tellement hâte de commencer cette nouvelle aventure avec toi. Future Madame je t'aime !",
             task: "On compte les jours ensemble !"
         }
     ],
@@ -122,9 +123,9 @@ const DEFAULT_GIFT_POOL = {
         },
         {
             emoji: "🍞",
-            title: "Atelier Pain d'Épices",
-            description: "Ce soir on devient pâtissiers ! J'ai un kit pour faire un pain d'épices ensemble. On va pouvoir le décorer, mettre de la musique de Noël, et passer une soirée gourmande et créative. Et après... dégustation !",
-            task: "Le plus beau pain d'épices gagne un bisou !",
+            title: "On met la main à la pâte",
+            description: "Ce soir c'est concours ! Le cadeau du jour est caché à côté du nutella ! Gratouille ou papouille pour le plus beau des deux !",
+            task: "Le plus beau pain d'épices gagne !",
             gift: "Kit pain d'épices inclus !"
         },
         {
