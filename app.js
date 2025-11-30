@@ -275,8 +275,8 @@ class AdventCalendar {
             const response = await fetch('/api/history');
             if (response.ok) {
                 const serverData = await response.json();
-                // Merge server data with local (server wins)
-                this.openedDays = { ...this.openedDays, ...serverData };
+                // Server is the source of truth - replace local data
+                this.openedDays = serverData;
                 this.saveOpenedDays();
                 this.updateUI();
                 console.log('Synced from server:', Object.keys(serverData).length, 'days');
