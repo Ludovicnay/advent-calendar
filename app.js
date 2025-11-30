@@ -139,7 +139,7 @@ class AdventCalendar {
         // December = month 11
         if (month === 11 && day >= 1 && day <= 25) {
             return day;
-        
+        }
 
         // Before December 1st
         if (month < 11 || (month === 11 && day < 1)) {
