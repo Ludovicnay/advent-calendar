@@ -38,12 +38,6 @@ const DEFAULT_GIFT_POOL = {
             gift: "Enfin !"
         },
         {
-            emoji: "✨",
-            title: "Un esprit sain dans un corps sain",
-            description: "On travaille beaucoup tous les deux et toi particulièrement alors pour ton prochain cadeau rendez-vous là où on range le poulet et le poisson !",
-            task: "À utiliser ensemble pour une session détente !"
-        },
-        {
             emoji: "🍹",
             title: "Drink'up",
             description: "Ce soir, cocktail (ou chocolat chaud) de Noël ! On invente un cocktail ou on fait un chocolat chaud maison !",
@@ -60,6 +54,12 @@ const DEFAULT_GIFT_POOL = {
             title: "Un petit chocolat pour rester au chaud",
             description: "On chasse les oeuf à Noël ? Je vais gacher 30 oeufs en chocolat dans le salon et si tu les retrouves tous tu gagnes. Sinon c'est moi qui gagne !",
             task: "Le gagnant fait le repas vétu uniquement d'un tablier."
+        },
+        {
+            emoji: "✨",
+            title: "Un esprit sain dans un corps sain",
+            description: "On travaille beaucoup tous les deux et toi particulièrement alors pour ton prochain cadeau rendez-vous là où on range le poulet et le poisson !",
+            task: "À utiliser ensemble pour une session détente !"
         }
 
 

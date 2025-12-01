@@ -130,6 +130,25 @@ app.post('/api/reset', async (req, res) => {
     }
 });
 
+// Delete a specific day (admin only)
+app.delete('/api/history/:day', async (req, res) => {
+    const { adminPassword } = req.body;
+    const dayNumber = parseInt(req.params.day);
+
+    // Verify admin password
+    if (adminPassword !== 'admin!') {
+        return res.status(401).json({ error: 'Unauthorized' });
+    }
+
+    try {
+        await pool.query('DELETE FROM opened_days WHERE day_number = $1', [dayNumber]);
+        res.json({ success: true, message: `Day ${dayNumber} deleted` });
+    } catch (err) {
+        console.error('Error deleting day:', err);
+        res.status(500).json({ error: 'Database error' });
+    }
+});
+
 // Serve static files
 app.use(express.static(path.join(__dirname), {
     extensions: ['html'],
